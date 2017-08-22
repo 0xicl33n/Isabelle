@@ -10,9 +10,12 @@ from pymongo import MongoClient
 client = MongoClient()
 
 #our db
-db = client.nintendo
+db = client.isabelle
 #our collection
 codes = db.switch
+
+#3ds_codes = db.3ds
+#wiiu_codes = db.wiiu
 
 bot = commands.Bot(command_prefix="i!")
 botAuth = config.token
@@ -31,7 +34,7 @@ async def on_ready():
 
 
 
-@bot.command(pass_context=True,description='Register your FC with spyke.\n Do !register SW-5208-7719-6394 with your corresponding FC, it has to be in SW-XXXX-XXXX-XXXX format or else it isnt accepted')
+@bot.command(pass_context=True,description='Register your FC with Isabelle.\n Use !register SW-5208-7719-6394 with your corresponding FC, it has to be in SW-XXXX-XXXX-XXXX format or else it isnt accepted')
 async def register(ctx):
         this_id = ctx.message.author.id
         this_fc = ctx.message.content.split('!register ',1)[-1]
@@ -43,13 +46,13 @@ async def register(ctx):
             if codes.find({'discordId':this_id}).count() > 0:         
                 codes.remove({'discordId':this_id,})
                 codes.insert({'discordId':this_id, 'FC':this_fc})   
-                return await bot.say(ctx.message.author.mention+', your friend code has been updated, love.')
+                return await bot.say(ctx.message.author.mention+', your friend code has been updated, thanks!')
                   
             else:
                 codes.insert({'discordId':this_id, 'FC':this_fc})
-                return await bot.say(ctx.message.author.mention+', you have been added, cheers.')
+                return await bot.say(ctx.message.author.mention+' you have been added!')
         else:
-            return await bot.say('Sorry love, i only accept friend codes..')
+            return await bot.say('Sorry! I only accept friend codes!')
 
 
 
@@ -62,7 +65,7 @@ async def fc(user:discord.Member):
             ourFC = list(qResult)[0]
             return await bot.say('Their FC is '+str(ourFC))
     else:
-        return await bot.say('Not in database. Please !register your FC')
+        return await bot.say('You aren\'t in the database! Please look at `!help register`')
 
 
 
